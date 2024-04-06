@@ -1,9 +1,11 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+// A01345407 A01377048 A01329182 A01339333
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
-typedef struct {
+typedef struct
+{
     int id;
     char *firstName;
     char *lastName;
@@ -15,10 +17,14 @@ FILE *inputfile;
 FILE *outputfile;
 
 // Check valid id
-int checkId(Person *arr, int size, int id, int pos) {
-    for (int i = 0; i < size; i++) {
-        if (i != pos){
-            if (arr[i].id == id || id < 0 || !isdigit(id)){
+int checkId(Person *arr, int size, int id, int pos)
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (i != pos)
+        {
+            if (arr[i].id == id || id < 0 || !isdigit(id))
+            {
                 return 0;
             }
         }
@@ -27,19 +33,22 @@ int checkId(Person *arr, int size, int id, int pos) {
 }
 
 // Check valid salary
-int checkSalary(float salary) {
-    if (salary < 0){
+int checkSalary(float salary)
+{
+    if (salary < 0)
+    {
         return 0;
     };
     return 1;
 }
 
 // Check valid name
-int checkName(char *name) {
-    for (int i = 0; i < strlen(name); i++) {
-        if (!((name[i] >= 'a' && name[i] <= 'z') 
-            || (name[i] >= 'A' && name[i] <= 'Z') 
-            || name[i] == '-')) {
+int checkName(char *name)
+{
+    for (int i = 0; i < strlen(name); i++)
+    {
+        if (!((name[i] >= 'a' && name[i] <= 'z') || (name[i] >= 'A' && name[i] <= 'Z') || name[i] == '-'))
+        {
             return 0;
         }
     }
@@ -47,27 +56,34 @@ int checkName(char *name) {
 }
 
 // Compare
-int comparePerson(Person *a, Person *b) {
+int comparePerson(Person *a, Person *b)
+{
     int firstNameCompare = strcmp(a->firstName, b->firstName);
-    if (firstNameCompare != 0) {
+    if (firstNameCompare != 0)
+    {
         return firstNameCompare;
     }
 
     int lastNameCompare = strcmp(a->lastName, b->lastName);
-    if (lastNameCompare != 0) {
+    if (lastNameCompare != 0)
+    {
         return lastNameCompare;
-    } 
+    }
 
     return a->id - b->id;
 }
 
 // Sorts an array of people based of criteria.
-void sortArray(Person *arr, int size) {
-    for (int i = 0; i < size; i++) {
+void sortArray(Person *arr, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
         Person *smallest = &arr[i];
         int s = 0;
-        for (int j = i; j < size; j++) {
-            if (comparePerson(smallest, &arr[j]) >= 0) {
+        for (int j = i; j < size; j++)
+        {
+            if (comparePerson(smallest, &arr[j]) >= 0)
+            {
                 smallest = &arr[j];
                 s = j;
             }
@@ -78,8 +94,10 @@ void sortArray(Person *arr, int size) {
     }
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 3){
+int main(int argc, char *argv[])
+{
+    if (argc != 3)
+    {
         // Quit
         return 1;
     }
@@ -90,14 +108,16 @@ int main(int argc, char *argv[]) {
 
     // Open the input file
     inputfile = fopen(inputFileName, "r");
-    if (inputfile == NULL) {
+    if (inputfile == NULL)
+    {
         // Quit
         return 1;
     }
 
     // Open the output file
     outputfile = fopen(outputFileName, "w");
-    if (outputfile == NULL) {
+    if (outputfile == NULL)
+    {
         // Quit
         return 1;
     }
@@ -106,22 +126,28 @@ int main(int argc, char *argv[]) {
     int size = 0;
     int foundE = 0;
     char inputchar;
-    while ((inputchar = fgetc(inputfile)) != EOF) {
+    while ((inputchar = fgetc(inputfile)) != EOF)
+    {
         char nextchar;
-        if (inputchar == 'E' && (nextchar = fgetc(inputfile)) == '\n') {
+        if (inputchar == 'E' && (nextchar = fgetc(inputfile)) == '\n')
+        {
             foundE++;
             break;
-        } else {
-            if (inputchar == '\n') {
+        }
+        else
+        {
+            if (inputchar == '\n')
+            {
                 size++;
             }
-        }  
+        }
     }
     fclose(inputfile);
-    
+
     // Error case
     // No E end
-    if (foundE != 1) {
+    if (foundE != 1)
+    {
         fprintf(outputfile, "Error");
         // Quit
         return 1;
@@ -130,7 +156,8 @@ int main(int argc, char *argv[]) {
     // Array to store person info
     Person *arr = malloc(sizeof(Person) * size);
     // Empty record
-    if (size == 0 || arr == NULL){
+    if (size == 0 || arr == NULL)
+    {
         fprintf(outputfile, "Error");
         // Quit
         return 1;
@@ -140,34 +167,37 @@ int main(int argc, char *argv[]) {
     inputfile = fopen(inputFileName, "r");
 
     // Put persons in array
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++)
+    {
 
         // Initialize lastName, firstName and studentNumber
         arr[i].firstName = malloc(50 * sizeof(char));
         arr[i].lastName = malloc(50 * sizeof(char));
-        if (arr[i].firstName == NULL || arr[i].lastName == NULL){
+        if (arr[i].firstName == NULL || arr[i].lastName == NULL)
+        {
             fprintf(outputfile, "Error");
             // Quit
             return 1;
         }
-        
+
         // Scan students in input file
-        fscanf(inputfile, "%d,%[^ ] %[^,],%f", 
+        fscanf(inputfile, "%d,%[^ ] %[^,],%f",
                &arr[i].id,
-               arr[i].firstName, 
-               arr[i].lastName, 
-               &arr[i].salary 
-               );
+               arr[i].firstName,
+               arr[i].lastName,
+               &arr[i].salary);
 
         // Non-valid id
-        if (!checkId(arr, size, arr[i].id, i)) {
+        if (!checkId(arr, size, arr[i].id, i))
+        {
             fprintf(outputfile, "Error");
             // Quit
             return 1;
         }
 
         // Non-valid salary
-        if (!checkSalary(arr[i].salary)) {
+        if (!checkSalary(arr[i].salary))
+        {
             fprintf(outputfile, "Error");
             // Quit
             return 1;
@@ -177,13 +207,15 @@ int main(int argc, char *argv[]) {
     sortArray(arr, size);
 
     // Print the output
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++)
+    {
         fprintf(outputfile, "%d,%s %s,%.2f\n",
                 arr[i].id, arr[i].firstName, arr[i].lastName, arr[i].salary);
     }
 
     // Free the array
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++)
+    {
         free(arr[i].firstName);
         free(arr[i].lastName);
     }
